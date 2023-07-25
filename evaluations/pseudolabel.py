@@ -78,8 +78,8 @@ class PseudolabelGenerator(pl.LightningModule):
         name = name.replace(".png", "_pseudolabel.png").replace(
             ".jpg", "_pseudolabel.png"
         )
-        classes = os.path.join(self.output_dir, "pseudolabelTrainIds_final", name)
-        colors = os.path.join(self.output_dir, "colors_final", name)
+        classes = os.path.join(self.output_dir, "pseudolabelTrainIds", name)
+        colors = os.path.join(self.output_dir, "colors", name)
         os.makedirs(os.path.dirname(classes), exist_ok=True)
         os.makedirs(os.path.dirname(colors), exist_ok=True)
 

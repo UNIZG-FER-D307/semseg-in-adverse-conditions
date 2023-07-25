@@ -165,100 +165,51 @@ def load_unsupervised_train(dataroots, bs, train_transforms, config):
 
 
 def prepare_datasets_for_pseudolabeling(dataroots, train_transforms):
-    acdc_night_train = ACDCUnsupervised(
-        root=dataroots["acdc"],
-        split="val",
-        tag="night",
+    dz_day_train = DarkZurichUnsupervised(
+        dataroots["dark_zurich"],
+        split="train",
+        condition="day",
         return_name=True,
         image_transform=tf.Compose(
-            train_transforms["image"] + [tf.Normalize(acdc_night_mean, acdc_night_std)]
+            train_transforms["image"]
+            + [tf.Normalize(dark_zurich_day_mean, dark_zurich_day_std)]
         ),
     )
 
-    acdc_snow_train = ACDCUnsupervised(
-        root=dataroots["acdc"],
-        split="val",
-        tag="snow",
-        return_name=True,
-        image_transform=tf.Compose(
-            train_transforms["image"] + [tf.Normalize(acdc_snow_mean, acdc_snow_std)]
-        ),
-    )
-
-    acdc_rain_train = ACDCUnsupervised(
-        root=dataroots["acdc"],
-        split="val",
-        tag="rain",
-        return_name=True,
-        image_transform=tf.Compose(
-            train_transforms["image"] + [tf.Normalize(acdc_rain_mean, acdc_rain_std)]
-        ),
-    )
-
-    acdc_fog_train = ACDCUnsupervised(
-        root=dataroots["acdc"],
-        split="val",
-        tag="fog",
-        return_name=True,
-        image_transform=tf.Compose(
-            train_transforms["image"] + [tf.Normalize(acdc_fog_mean, acdc_fog_std)]
-        ),
-    )
-
-    # cityscapes_unsup = CityscapesUnsupervised(
-    #    dataroot=dataroots["city"],
-    #    split="val",
-    #    image_transform=tf.Compose(
-    #        train_transforms["image"] + [tf.Normalize(cityscapes_mean, cityscapes_std)]
-    #    ),
-    # )
-
-    # dz_day_train = DarkZurichUnsupervised(
-    #    dataroots["dark_zurich"],
-    #    split="train",
-    #    condition="day",
-    #    return_name=True,
-    #    image_transform=tf.Compose(
-    #        train_transforms["image"]
-    #        + [tf.Normalize(dark_zurich_day_mean, dark_zurich_day_std)]
-    #    ),
-    # )
-    #
-    # dz_twilight_train = DarkZurichUnsupervised(
-    #    dataroots["dark_zurich"],
-    #    split="train",
-    #    condition="twilight",
-    #    return_name=True,
-    #    image_transform=tf.Compose(
-    #        train_transforms["image"]
-    #        + [tf.Normalize(dark_zurich_twilight_mean, dark_zurich_twilight_std)]
-    #    ),
-    # )
-    #
-    # dz_night_train = DarkZurichUnsupervised(
-    #    dataroots["dark_zurich"],
-    #    split="train",
-    #    condition="night",
-    #    return_name=True,
-    #    image_transform=tf.Compose(
-    #        train_transforms["image"]
-    #        + [tf.Normalize(dark_zurich_night_mean, dark_zurich_night_std)]
-    #    ),
-    # )
-    #
-    # dz_night_val = DarkZurichUnsupervised(
-    #    dataroots["dark_zurich"],
-    #    split="val",
-    #    condition="night",
-    #    return_name=True,
-    #    image_transform=tf.Compose(
-    #        train_transforms["image"]
-    #        + [tf.Normalize(dark_zurich_night_mean, dark_zurich_night_std)]
-    #    ),
-    # )
-
-    # FIXME - when all datasets are available
     """
+    dz_twilight_train = DarkZurichUnsupervised(
+        dataroots["dark_zurich"],
+        split="train",
+        condition="twilight",
+        return_name=True,
+        image_transform=tf.Compose(
+            train_transforms["image"]
+            + [tf.Normalize(dark_zurich_twilight_mean, dark_zurich_twilight_std)]
+        ),
+    )
+
+    dz_night_train = DarkZurichUnsupervised(
+        dataroots["dark_zurich"],
+        split="train",
+        condition="night",
+        return_name=True,
+        image_transform=tf.Compose(
+            train_transforms["image"]
+            + [tf.Normalize(dark_zurich_night_mean, dark_zurich_night_std)]
+        ),
+    )
+
+    dz_night_val = DarkZurichUnsupervised(
+        dataroots["dark_zurich"],
+        split="val",
+        condition="night",
+        return_name=True,
+        image_transform=tf.Compose(
+            train_transforms["image"]
+            + [tf.Normalize(dark_zurich_night_mean, dark_zurich_night_std)]
+        ),
+    )
+
     bdd_train = BDDUnsupervised(
         dataroots["bdd100k"],
         split="train",
@@ -311,8 +262,6 @@ def prepare_datasets_for_pseudolabeling(dataroots, train_transforms):
         ),
     )
 
-    """
-    """
     bdd100k_rainy_train = BDDConditionwiseUnsupervised(
         dataroots["bdd100k"],
         split="val",
@@ -322,27 +271,24 @@ def prepare_datasets_for_pseudolabeling(dataroots, train_transforms):
             train_transforms["image"] + [tf.Normalize(bdd_rain_mean, bdd_rain_std)]
         ),
     )
-    """
-    # bdd100k_foggy_train = BDDConditionwiseUnsupervised(
-    #    dataroots["bdd100k"],
-    #    split="train",
-    #    condition="foggy",
-    #    return_name=True,
-    #    image_transform=tf.Compose(
-    #        train_transforms["image"] + [tf.Normalize(bdd_fog_mean, bdd_fog_std)]
-    #    ),
-    # )
-    # bdd100k_snowy_train = BDDConditionwiseUnsupervised(
-    #    dataroots["bdd100k"],
-    #    split="val",
-    #    condition="snowy",
-    #    return_name=True,
-    #    image_transform=tf.Compose(
-    #        train_transforms["image"] + [tf.Normalize(bdd_snow_mean, bdd_snow_std)]
-    #    ),
-    # )
-    """
-
+    bdd100k_foggy_train = BDDConditionwiseUnsupervised(
+        dataroots["bdd100k"],
+        split="train",
+        condition="foggy",
+        return_name=True,
+        image_transform=tf.Compose(
+            train_transforms["image"] + [tf.Normalize(bdd_fog_mean, bdd_fog_std)]
+        ),
+    )
+    bdd100k_snowy_train = BDDConditionwiseUnsupervised(
+        dataroots["bdd100k"],
+        split="val",
+        condition="snowy",
+        return_name=True,
+        image_transform=tf.Compose(
+            train_transforms["image"] + [tf.Normalize(bdd_snow_mean, bdd_snow_std)]
+        ),
+    )
     cadcd_all = CADCDUnsupervised(
         dataroots["cadcd"],
         return_name=True,
@@ -350,7 +296,6 @@ def prepare_datasets_for_pseudolabeling(dataroots, train_transforms):
             train_transforms["image"] + [tf.Normalize(cadcd_mean, cadcd_std)]
         ),
     )
-
     stf_all = STFUnsupervised(
         dataroots["stf"],
         return_name=True,
@@ -360,22 +305,7 @@ def prepare_datasets_for_pseudolabeling(dataroots, train_transforms):
     )
     """
 
-    # return [bdd_val, bdd_train, bdd_test, dz_day_train, dz_twilight_train, dz_night_train, dz_night_val, nightowls_train, nightcity_train]
-    # return [bdd100k_snowy_train, bdd100k_rainy_train, bdd100k_foggy_train]
-    # return [cadcd_all]
-    # # return [bdd_val, bdd_train, bdd_test]
-    # return [bdd100k_snowy_train]
-    # return [nightcity_train]
-    # return [nightowls_train]
-    # return [dz_day_train, dz_twilight_train, dz_night_train]
-    # return [dz_twilight_train]
-    # return [cityscapes_unsup]
-    # return [acdc_snow_train]
-    # return [acdc_rain_train]
-    # return [acdc_fog_train]
-    # return [dz_twilight_train]
-    # return [dz_night_val]
-    return [acdc_fog_train, acdc_night_train, acdc_snow_train, acdc_rain_train]
+    return [dz_day_train]
 
 
 def load_datasets_for_pseudolabeling(dataroots, train_transforms):

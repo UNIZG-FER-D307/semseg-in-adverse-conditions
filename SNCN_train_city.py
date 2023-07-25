@@ -11,7 +11,10 @@ from pytorch_lightning.callbacks import (
 from pytorch_lightning import loggers as pl_loggers
 from models import (
     convnext_tiny_,
+    convnext_base_,
+    convnext_large_,
     PyramidSemSeg,
+    SingleScaleSemSeg,
 )
 from experiments import BoundaryAwareSemseg
 from data import (
@@ -23,35 +26,51 @@ from data import (
     cityscapes_std,
 )
 from config import CITYSCAPES_ROOT
+from argparse import ArgumentParser
+from datetime import datetime
+
+backbone_versions = {
+    "tiny": convnext_tiny_,
+    "base": convnext_base_,
+    "large": convnext_large_,
+}
+
+swiftnet_versions = {
+    "ss": SingleScaleSemSeg,
+    "pyr": PyramidSemSeg,
+}
 
 
-def main():
+def main(args):
+    # example if you want specific seed
     # pl.seed_everything(123, workers=True)
     # fire on all cylinders
     torch.backends.cudnn.enabled = False
     config = {
-        "backbone": convnext_tiny_(pretrained=True, high_res=True),
-        "batch_size_per_gpu": 1,
-        "crop_size": (1024, 1024),
-        "jitter_range": (0.5, 2),
-        "max_epochs": 50,
-        "ignore_id": 255,
-        "num_classes": 19,
-        "loss": "FL",
-        "lr": 4e-4,
-        "lr_min": 1e-7,
-        "precision": 16,
-        "GPUs": [0, 1],
+        "backbone": backbone_versions[args.backbone_version](
+            pretrained=True, high_res=True
+        ),
+        "batch_size_per_gpu": args.batch_size_per_gpu,
+        "crop_size": (args.crop_height, args.crop_width),
+        "jitter_range": (args.sjl, args.sju),
+        "max_epochs": args.max_epochs,
+        "ignore_id": args.ignore_id,
+        "num_classes": args.num_classes,
+        "loss": args.loss_type,
+        "lr": args.lr,
+        "lr_min": args.lr_min,
+        "precision": args.precision,
+        "GPUs": ",".join(args.gpus),
+        "upsample_dims": args.upsample_dims,
+        "output_dir": f"logs/city/CN_SN_{args.swiftnet_version}_{args.backbone_version}_{args.precision}_{args.loss_type}_{args.batch_size_per_gpu}_{(args.crop_height, args.crop_width)}_{(args.sjl, args.sju)}_{args.upsample_dims}_{args.max_epochs}_{args.gpus}_{str(datetime.now())}",
     }
 
-    config[
-        "output_dir"
-    ] = f"logs/city/Convnext_SN_tiny_epochs={config['max_epochs']}_precision={config['precision']}_crop_size={config['crop_size']}_jitter={config['jitter_range']}_bspg={config['batch_size_per_gpu']}_gpus={config['GPUs']}"
+    print(config["GPUs"])
 
-    model = PyramidSemSeg(
+    model = swiftnet_versions[args.swiftnet_version](
         backbone=config["backbone"],
         num_classes=config["num_classes"],
-        upsample_dims=256,
+        upsample_dims=config["upsample_dims"],
     )
     backbone_params, upsample_params = model.prepare_optim_params()
     lr_backbone = config["lr"] / 4.0
@@ -105,7 +124,7 @@ def main():
         monitor="val_mIoU",
         dirpath=config["output_dir"],
         filename="model-{epoch:02d}-{val_mIoU:.2f}",
-        save_top_k=5,
+        save_top_k=2,
         mode="max",
         save_last=True,
     )
@@ -127,4 +146,41 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = ArgumentParser()
+    parser.add_argument(
+        "-bv",
+        "--backbone_version",
+        type=str,
+        required=True,
+        choices=["tiny", "base", "large"],
+    )
+    parser.add_argument(
+        "-sv",
+        "--swiftnet_version",
+        type=str,
+        default="pyr",
+        choices=["pyr", "ss"],
+        help="Wheather to use singlescale or pyramid swiftnet",
+    )
+    parser.add_argument("--upsample_dims", type=int, default=256)
+    parser.add_argument("--num_classes", type=int, default=19)
+    parser.add_argument("--ignore_id", type=int, default=255)
+    # focal loss or cross entropy loss
+    parser.add_argument("--loss_type", type=str, choices=["FL", "CE"], default="FL")
+    parser.add_argument("--lr", type=float, default=4e-4)
+    parser.add_argument("--lr_min", type=float, default=1e-7)
+    parser.add_argument("--precision", type=int, default=16, choices=[16, 32])
+    parser.add_argument("--max_epochs", type=int, default=50)
+    parser.add_argument("--batch_size_per_gpu", type=int, default=2)
+    parser.add_argument("--gpus", nargs="+", help="Gpu indices", required=True)
+    parser.add_argument("--crop_height", type=int, default=1024)
+    parser.add_argument("--crop_width", type=int, default=1024)
+    parser.add_argument(
+        "--sjl", help="scale jitter lower bound", default=0.5, type=float
+    )
+    parser.add_argument(
+        "--sju", help="scale jitter upper bound", default=2.0, type=float
+    )
+
+    args = parser.parse_args()
+    main(args)

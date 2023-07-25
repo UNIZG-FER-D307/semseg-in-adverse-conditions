@@ -19,8 +19,6 @@ ADE20k_ROOT = ""
 FISHY_LOST_AND_FOUND = ""
 GTA5_ROOT = "datasets/gta5"
 VISTAS_CONFIG = VISTAS_ROOT
-SAM_CHECKPOINT_PATH = "/home/imartinovic/vision4allseasons-kiss/segment-anything/ckpts/sam_vit_h_4b8939.pth"
-FOUNDATION_CHECKPOINT_PATH = "ckpts/model_od_grce_lp.ckpt"
 DATAROOTS = {
     "foggy_zurich": FOGGY_ZURICH_ROOT,
     "dark_zurich": DARK_ZURICH_ROOT,
@@ -45,5 +43,6 @@ DATAROOTS = {
 """
 CITYSCAPES_ROOT = "datasets/cityscapes"
 VISTAS_ROOT = "datasets/vistas"
+VISTAS_CONFIG = VISTAS_ROOT
 
 DATAROOTS = {"city": CITYSCAPES_ROOT, "vistas": VISTAS_ROOT}

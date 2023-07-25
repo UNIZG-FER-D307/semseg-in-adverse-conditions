@@ -136,4 +136,6 @@ dmypy.json
 ckpts
 datasets
 .vscode
-logs
+*.pth
+*.pt
+logs/*
