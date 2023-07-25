@@ -31,14 +31,14 @@ swiftnet_versions = {
 
 def main(args):
     config = {
-        "backbone": backbone_versions[args.model_version](
+        "backbone": backbone_versions[args.backbone_version](
             pretrained=True, high_res=True
         ),
         "ignore_id": args.ignore_id,
         "num_classes": args.num_classes,
         "GPUs": ",".join(args.gpus),
-        "output_dir": "logs/pseudolabeling_log",
-        "submission_output": "./output_test",
+        "output_dir": args.output_dir,
+        "output_pseudo": args.output_pseudo,
     }
 
     model = swiftnet_versions[args.swiftnet_version](
@@ -60,13 +60,13 @@ def main(args):
         model,
         ignore_id=config["ignore_id"],
         num_classes=config["num_classes"],
-        output_dir=config["submission_output"],
+        output_dir=config["output_pseudo"],
+        min_conf=args.minimal_confidence,
     )
     val_loader = load_datasets_for_pseudolabeling(DATAROOTS, create_raw_val_transform())
 
-    output_dir = config["output_dir"]
     trainer = pl.Trainer(
-        default_root_dir=output_dir, devices=config["GPUs"], accelerator="gpu"
+        default_root_dir=config["output_dir"], devices=config["GPUs"], accelerator="gpu"
     )
 
     trainer.test(pl_exp, dataloaders=val_loader)
@@ -74,7 +74,12 @@ def main(args):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("--ckpt_path", type=str, required=True)
+    parser.add_argument(
+        "--ckpt_path",
+        type=str,
+        required=True,
+        help="Model checkpoint for pseudolabels generation",
+    )
     parser.add_argument(
         "-bv",
         "--backbone_version",
@@ -94,6 +99,13 @@ if __name__ == "__main__":
     parser.add_argument("--num_classes", type=int, default=19)
     parser.add_argument("--ignore_id", type=int, default=255)
     parser.add_argument("--gpus", nargs="+", help="Gpu indices", required=True)
-
+    parser.add_argument("--output_dir", type=str, default="logs/pseudolabeling_logs")
+    parser.add_argument("--output_pseudo", type=str, default="./output_test")
+    parser.add_argument(
+        "--minimal_confidence",
+        type=float,
+        default=0.99,
+        help="The hard pseudolabel will incorporate all pixels whose softmax values surpass the specified minimal confidence threshold.",
+    )
     args = parser.parse_args()
     main(args)
