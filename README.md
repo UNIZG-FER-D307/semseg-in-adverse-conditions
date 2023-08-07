@@ -12,7 +12,41 @@
  - Add `config.json` from vistas and create `datasets` folder (remove from `.gitgnore`)
  - Add singlescale/multiscale inference support 
 
- ## Environment Installation
+## Environment Installation
+
+Before running the acdc-semseg project, make sure you have [miniconda](https://docs.conda.io/en/latest/miniconda.html) or [anaconda](https://docs.anaconda.com/free/anaconda/install/index.html) installed on your system. Follow the steps below to set up the required environment:
+
+1. Create and activate the conda environment using Python 3.8:
+
+   ```bash
+   conda create --name acdc-semseg python=3.8
+   conda activate acdc-semseg
+   ```
+
+2. Install the necessary packages using `pip`:
+
+   ```bash
+   pip install torch==2.0.0+cu117 torchvision==0.15.1+cu117 torchaudio==2.0.1 --index-url https://download.pytorch.org/whl/cu117
+   pip install -r requirements.txt
+   ```
+
+3. Install additional third-party packages, [open_clip](https://github.com/mlfoundations/open_clip), and [timm](https://github.com/huggingface/pytorch-image-models) from their official repositories:
+
+   ```bash
+   git clone https://github.com/mlfoundations/open_clip.git
+   cd open_clip
+   pip install -e .
+   cd ..
+
+   git clone https://github.com/huggingface/pytorch-image-models.git
+   cd pytorch-image-models
+   pip install -e .
+   cd ..
+   ```
+
+**Note:** The project has been developed and tested with CUDA 11.7, Pytorch 2.0, and Pytorch-Lightning 2.0.6. However, using Pytorch >=1.10 should also work fine.
+
+ ## Running scripts
  ## Architecture Validation
  ## Final Results
  ## Visualizations
