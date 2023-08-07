@@ -142,3 +142,5 @@ datasets/*
 own_images
 own_images_lit
 output_test
+open_clip
+pytorch-image-models
