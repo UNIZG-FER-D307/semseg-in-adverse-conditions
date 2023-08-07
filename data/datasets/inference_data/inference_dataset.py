@@ -59,7 +59,8 @@ class InferenceDataset(data.Dataset):
 
         if not len(self.files):
             raise Exception(
-                "> No files for split=[%s] found in %s" % (split, self.images_base)
+                "> No files found in %s with extension %s"
+                % (split, self.images_base, self.ext)
             )
 
         print("> Found %d %s images..." % (len(self.files), split))

@@ -68,7 +68,9 @@ def main(args):
         output_dir=config["output_pred"],
         min_conf=0,
     )
-    val_loader = load_own_dataset(args.img_dir, create_raw_val_transform())
+    val_loader = load_own_dataset(
+        args.img_dir, create_raw_val_transform(), ext=args.ext
+    )
 
     trainer = pl.Trainer(
         default_root_dir=config["output_dir"],
@@ -113,5 +115,11 @@ if __name__ == "__main__":
         help="Path to directory with images or path to the single image.",
     )
     parser.add_argument("--output_pred", type=str, default="./output_test")
+    parser.add_argument(
+        "--ext",
+        help="Extension of images for prediction generation.",
+        choices=["png", "jpg", "jpeg"],
+        default="png",
+    )
     args = parser.parse_args()
     main(args)

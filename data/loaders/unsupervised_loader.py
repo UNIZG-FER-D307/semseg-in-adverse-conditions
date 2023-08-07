@@ -311,7 +311,7 @@ def prepare_datasets_for_pseudolabeling(dataroots, train_transforms):
     return [dz_day_train]
 
 
-def prepare_own_dataset(root, train_transforms):
+def prepare_own_dataset(root, train_transforms, ext="png"):
     inference_dataset = InferenceDataset(
         root=root,
         return_name=True,
@@ -319,13 +319,14 @@ def prepare_own_dataset(root, train_transforms):
             train_transforms["image"]
             + [tf.Normalize(inference_data_mean, inference_data_std)]
         ),
+        ext=ext,
     )
 
     return inference_dataset
 
 
-def load_own_dataset(root, train_transforms):
-    ds = prepare_own_dataset(root, train_transforms)
+def load_own_dataset(root, train_transforms, ext="png"):
+    ds = prepare_own_dataset(root, train_transforms, ext=ext)
     print(f"> Loaded {ds} images for predictions generation.")
     return DataLoader(ds, batch_size=1, shuffle=False, pin_memory=True, num_workers=3)
 
