@@ -17,3 +17,4 @@ from .stf import *
 from .ade20k import *
 from .fishyscapes import *
 from .gta5 import *
+from .inference_data import *

@@ -133,9 +133,12 @@ dmypy.json
 /c.py
 /debug/
 /d.py
-ckpts
-datasets
+ckpts/*
 .vscode
 *.pth
 *.pt
 logs/*
+datasets/*
+own_images
+own_images_lit
+output_test

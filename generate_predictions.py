@@ -11,7 +11,7 @@ from models import (
     SingleScaleSemSeg,
 )
 from evaluations import PseudolabelGenerator
-from data import load_datasets_for_pseudolabeling, create_raw_val_transform
+from data import load_own_dataset, create_raw_val_transform
 from config import DATAROOTS
 from argparse import ArgumentParser
 
@@ -38,8 +38,13 @@ def main(args):
         "num_classes": args.num_classes,
         "GPUs": ",".join(args.gpus),
         "output_dir": args.output_dir,
-        "output_pseudo": args.output_pseudo,
+        "output_pred": args.output_pred,
     }
+
+    if "," not in config["GPUs"]:
+        config["GPUs"] = [int(config["GPUs"])]
+
+    print(config["GPUs"])
 
     model = swiftnet_versions[args.swiftnet_version](
         backbone=config["backbone"],
@@ -60,13 +65,15 @@ def main(args):
         model,
         ignore_id=config["ignore_id"],
         num_classes=config["num_classes"],
-        output_dir=config["output_pseudo"],
-        min_conf=args.minimal_confidence,
+        output_dir=config["output_pred"],
+        min_conf=0,
     )
-    val_loader = load_datasets_for_pseudolabeling(DATAROOTS, create_raw_val_transform())
+    val_loader = load_own_dataset(args.img_dir, create_raw_val_transform())
 
     trainer = pl.Trainer(
-        default_root_dir=config["output_dir"], devices=config["GPUs"], accelerator="gpu"
+        default_root_dir=config["output_dir"],
+        devices=config["GPUs"],
+        accelerator="gpu",
     )
 
     trainer.test(pl_exp, dataloaders=val_loader)
@@ -100,12 +107,11 @@ if __name__ == "__main__":
     parser.add_argument("--ignore_id", type=int, default=255)
     parser.add_argument("--gpus", nargs="+", help="Gpu indices", required=True)
     parser.add_argument("--output_dir", type=str, default="logs/pseudolabeling_logs")
-    parser.add_argument("--output_pseudo", type=str, default="./output_test")
     parser.add_argument(
-        "--minimal_confidence",
-        type=float,
-        default=0.99,
-        help="The hard pseudolabel will incorporate all pixels whose softmax values surpass the specified minimal confidence threshold.",
+        "--img_dir",
+        type=str,
+        help="Path to directory with images or path to the single image.",
     )
+    parser.add_argument("--output_pred", type=str, default="./output_test")
     args = parser.parse_args()
     main(args)

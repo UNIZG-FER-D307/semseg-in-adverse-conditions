@@ -39,6 +39,9 @@ from data.datasets import (
     BDDConditionwiseUnsupervised,
     CADCDUnsupervised,
     CityscapesUnsupervised,
+    InferenceDataset,
+    inference_data_mean,
+    inference_data_std,
 )
 from data.datasets import (
     bdd_rain_mean,
@@ -306,6 +309,25 @@ def prepare_datasets_for_pseudolabeling(dataroots, train_transforms):
     """
 
     return [dz_day_train]
+
+
+def prepare_own_dataset(root, train_transforms):
+    inference_dataset = InferenceDataset(
+        root=root,
+        return_name=True,
+        image_transform=tf.Compose(
+            train_transforms["image"]
+            + [tf.Normalize(inference_data_mean, inference_data_std)]
+        ),
+    )
+
+    return inference_dataset
+
+
+def load_own_dataset(root, train_transforms):
+    ds = prepare_own_dataset(root, train_transforms)
+    print(f"> Loaded {ds} images for predictions generation.")
+    return DataLoader(ds, batch_size=1, shuffle=False, pin_memory=True, num_workers=3)
 
 
 def load_datasets_for_pseudolabeling(dataroots, train_transforms):

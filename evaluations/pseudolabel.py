@@ -16,7 +16,7 @@ class PseudolabelGenerator(pl.LightningModule):
         num_classes,
         multiscale=True,
         save_output=True,
-        output_dir="./submission_outputs",
+        output_dir="./generation_outputs",
         min_conf=0.99,
     ):
         super().__init__()
@@ -29,7 +29,6 @@ class PseudolabelGenerator(pl.LightningModule):
         self.save_output = save_output
         self.output_dir = output_dir
         self.minimal_confidence = min_conf
-        print(self.minimal_confidence)
 
     def forward(self, x):
         # in lightning, forward defines the prediction/inference actions
@@ -79,7 +78,7 @@ class PseudolabelGenerator(pl.LightningModule):
             ".jpg", "_pseudolabel.png"
         )
         classes = os.path.join(self.output_dir, "pseudolabelTrainIds", name)
-        colors = os.path.join(self.output_dir, "colors", name)
+        colors = os.path.join(self.output_dir, "colorized", name)
         os.makedirs(os.path.dirname(classes), exist_ok=True)
         os.makedirs(os.path.dirname(colors), exist_ok=True)
 
