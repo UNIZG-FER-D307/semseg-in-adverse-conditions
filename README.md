@@ -46,10 +46,44 @@ Before running the acdc-semseg project, make sure you have [miniconda](https://d
 
 **Note:** The project has been developed and tested with CUDA 11.7, Pytorch 2.0, and Pytorch-Lightning 2.0.6. However, using Pytorch >=1.10 should also work fine.
 
- ## Running scripts
- ## Architecture Validation
- ## Final Results
- ## Visualizations
+ ## Running
+We provide three scripts:
+
+- `SNCN_train_city.py`: This script is used for training SwiftNet+ConvNext on the `Cityscapes` training subset and evaluating it on the `Cityscapes` validation split.
+- `generate_pseudolabels.py`: This script generates pseudolabels for unlabeled data, saving the generated pseudolabels in the `TODO` folder, along with colorized versions of the pseudolabels in the same directory.
+- `generate_predictions.py`: This script generates predictions, saving the resulting segmentation maps in the `TODO` folder, along with colorized versions of the segmentation maps.
+
+#### Training
+To run training for ConvNeXt-tiny+SwiftNet-pyramid on the `Cityscapes` training subset and evaluate it on the `Cityscapes` validation subset (using GPUs with indices 0 and 1, with a batch size of 4 per GPU), execute the following command:
+
+```bash
+python SNCN_train_city.py -sv pyr -bv tiny --gpus 0 1 --batch_size_per_gpu 4
+```
+
+In `SNCN_train_city.py`, you can adjust other arguments as described in the script itself.
+
+ #### Generating Pseudolabels
+ #### Generating Predictions
+ ## Experiments
+ ### Architecture Validation
+ | **Backbone**                        | **Segmentation Head** | **Parameters** | **mIoU (%)** |
+|:----------------------------------|:---------------------|:--------------|:------------|
+| **convnext-tiny-384-22k_1k**        | SwiftNet-pyr-256      | 33.3M          | 78.89        |
+|                                    | SwiftNet-ss-256       | 30.9M          | **79.09**    |
+|                                    | UperNet-256           | 37.8M          | 77.58        |
+||
+| **convnextv2-tiny-fcmae-384-22k_1k**| SwiftNet-pyr-256      | 32.5M          | 78.23        |
+|                                    | SwiftNet-ss-256       | 30.2M          | 76.53        |
+|                                    | UperNet-256           | 37.1M          | 77.68        |
+||
+| **swin-tiny-p4-w7-224-22k**         | SwiftNet-pyr-256      | 32.2M          | 77.03        |
+|                                    | SwiftNet-ss-256       | 29.9M          | 76.65        |
+|                                    | UperNet-256           | 36.7M          | 76.67        |
+
+**Table 1:** Results obtained using the \emph{tiny} versions of the backbones. The first three rows show results using the \emph{Convnext} backbone pretrained on \emph{ImageNet-22k} and fine-tuned on the \emph{ImageNet-1k} dataset at a resolution of $384$, along with the corresponding upsampling path. The next three rows present results for the \emph{Convnext v2} backbone, trained on the same datasets and resolution as \emph{Convnext}. The last three rows display results obtained using the \emph{Swin Transformer} pretrained on \emph{ImageNet-22k} at a resolution of $224$. All experiments were conducted with a batch size of $10$, an initial learning rate of $4\mathrm{e}{-4}$ for the upsampling path, and an initial learning rate of $1\mathrm{e}{-4}$ for the backbone. The upsampling path dimension was set to $256$. Each experiment was run on two NVIDIA RTX A4500 graphics cards with 20GiB of available memory. Models are evaluated on the ACDC validation set.
+
+ ### Final Results
+ ### Visualizations
 
 #### Snow
 | Original Image | Single Model Prediction (ms) | Ensemble Prediction (ms) |

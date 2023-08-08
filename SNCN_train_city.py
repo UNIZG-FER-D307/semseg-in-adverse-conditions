@@ -65,7 +65,8 @@ def main(args):
         "output_dir": f"logs/city/CN_SN_{args.swiftnet_version}_{args.backbone_version}_{args.precision}_{args.loss_type}_{args.batch_size_per_gpu}_{(args.crop_height, args.crop_width)}_{(args.sjl, args.sju)}_{args.upsample_dims}_{args.max_epochs}_{args.gpus}_{str(datetime.now())}",
     }
 
-    print(config["GPUs"])
+    if "," not in config["GPUs"]:
+        config["GPUs"] = [int(config["GPUs"])]
 
     model = swiftnet_versions[args.swiftnet_version](
         backbone=config["backbone"],
@@ -74,6 +75,7 @@ def main(args):
     )
     backbone_params, upsample_params = model.prepare_optim_params()
     lr_backbone = config["lr"] / 4.0
+    
     optimizer = optim.Adam(
         [{"params": backbone_params, "lr": lr_backbone}, {"params": upsample_params}],
         lr=config["lr"],
@@ -151,7 +153,7 @@ if __name__ == "__main__":
         "-bv",
         "--backbone_version",
         type=str,
-        required=True,
+        default="tiny",
         choices=["tiny", "base", "large"],
     )
     parser.add_argument(
