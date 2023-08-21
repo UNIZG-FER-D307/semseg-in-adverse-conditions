@@ -1,4 +1,11 @@
-# Semantic Segmentation in Adverse Weather Conditions
+# Semantic Segmentation in Adverse Conditions
+|||
+|:--------------:|:------------------:|
+| ![Image 1](/imgs/orig_imgs/snow/GP010176_frame_000643_rgb_anon.png)  | ![Ensemble 1](/imgs/pred_ens/snow/GP010176_frame_000643_colors.png) |
+| ![Image 4](/imgs/orig_imgs/rain/GOPR0573_frame_000246_rgb_anon.png) | ![Ensemble 4](/imgs/pred_ens/rain/GOPR0573_frame_000246_colors.png) |
+| ![Image 7](/imgs/orig_imgs/night/GOPR0355_frame_000162_rgb_anon.png) | ![Ensemble 7](/imgs/pred_ens/night/GOPR0355_frame_000162_colors.png) |
+| ![Image 10](/imgs/orig_imgs/fog/GP010475_frame_000300_rgb_anon.png)  | ![Ensemble 10](/imgs/pred_ens/fog/GP010475_frame_000300_colors.png) |
+
 
 ## To Do
 - [ ] Add technical report
