@@ -57,8 +57,8 @@ Before running the acdc-semseg project, make sure you have [miniconda](https://d
 We provide three scripts:
 
 - `SNCN_train_city.py`: This script is used for training SwiftNet+ConvNext on the `Cityscapes` training subset and evaluating it on the `Cityscapes` validation split.
-- `generate_pseudolabels.py`: This script generates pseudolabels for unlabeled data, saving the generated pseudolabels in the `TODO` folder, along with colorized versions of the pseudolabels in the same directory.
-- `generate_predictions.py`: This script generates predictions, saving the resulting segmentation maps in the `TODO` folder, along with colorized versions of the segmentation maps.
+- `generate_pseudolabels.py`: This script generates pseudolabels for unlabeled data, saving the generated pseudolabels in the `args.output_pseudo` folder, along with colorized versions of the pseudolabels in the same directory.
+- `generate_predictions.py`: This script generates predictions, saving the resulting segmentation maps in the `args.output_pred` folder, along with colorized versions of the segmentation maps.
 
 #### Training
 To run training for ConvNeXt-tiny+SwiftNet-pyramid on the `Cityscapes` training subset and evaluate it on the `Cityscapes` validation subset (using GPUs with indices 0 and 1, with a batch size of 4 per GPU), execute the following command:
@@ -70,7 +70,15 @@ python SNCN_train_city.py -sv pyr -bv tiny --gpus 0 1 --batch_size_per_gpu 4
 In `SNCN_train_city.py`, you can adjust other arguments as described in the script itself.
 
  #### Generating Pseudolabels
+ To generate pseudolabels with trained ConvNeXt+SwiftNet model for some specific dataset (currently `DarkZurich Day subset`), first download checkpoints, and then execute the following command:
+ ```bash
+ python generate_pseudolabels.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/model_single/model_last-epoch=98-val_mIoU=86.50.ckpt
+ ```
  #### Generating Predictions
+ To generate predictions with trained ConvNeXt+SwiftNet model for custom images, first download checkpoints, and then execute the following command:
+ ```bash
+ python generate_predictions.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/model_single/model_last-epoch=98-val_mIoU=86.50.ckpt --img_dir path/to/own/directory/with/images
+ ```
  ## Experiments
  ### Architecture Validation
 

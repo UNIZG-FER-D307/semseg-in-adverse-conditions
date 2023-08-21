@@ -103,7 +103,7 @@ if __name__ == "__main__":
     parser.add_argument("--ignore_id", type=int, default=255)
     parser.add_argument("--gpus", nargs="+", help="Gpu indices", required=True)
     parser.add_argument("--output_dir", type=str, default="logs/pseudolabeling_logs")
-    parser.add_argument("--output_pseudo", type=str, default="./output_test")
+    parser.add_argument("--output_pseudo", type=str, default="./output_pseudo_test")
     parser.add_argument(
         "--minimal_confidence",
         type=float,

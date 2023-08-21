@@ -114,7 +114,7 @@ if __name__ == "__main__":
         type=str,
         help="Path to directory with images or path to the single image.",
     )
-    parser.add_argument("--output_pred", type=str, default="./output_test")
+    parser.add_argument("--output_pred", type=str, default="./output_pred_test")
     parser.add_argument(
         "--ext",
         help="Extension of images for prediction generation.",
