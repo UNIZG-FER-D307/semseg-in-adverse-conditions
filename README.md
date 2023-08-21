@@ -75,7 +75,7 @@ In `SNCN_train_city.py`, you can adjust other arguments as described in the scri
  python generate_pseudolabels.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/model_single/model_last-epoch=98-val_mIoU=86.50.ckpt
  ```
  #### Generating Predictions
- To generate predictions with trained ConvNeXt+SwiftNet model for custom images, first download [checkpoints](####checkpoints), and then execute the following command:
+ To generate predictions with trained ConvNeXt+SwiftNet model for custom images, first download [checkpoints](#checkpoints), and then execute the following command:
  ```bash
  python generate_predictions.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/model_single/model_last-epoch=98-val_mIoU=86.50.ckpt --img_dir path/to/own/directory/with/images
  ```
