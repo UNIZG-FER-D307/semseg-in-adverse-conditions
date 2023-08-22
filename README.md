@@ -60,6 +60,57 @@ We provide three scripts:
 - `generate_pseudolabels.py`: This script generates pseudolabels for unlabeled data, saving the generated pseudolabels in the `args.output_pseudo` folder, along with colorized versions of the pseudolabels in the same directory.
 - `generate_predictions.py`: This script generates predictions, saving the resulting segmentation maps in the `args.output_pred` folder, along with colorized versions of the segmentation maps.
 
+ ### Datasets
+
+Cityscapes and DarkZurich Val subset are sufficient to run [training](SNCN_train_city.py) and [pseudolabel generation](generate_pseudolabels.py) scripts.
+
+Cityscapes can be downloaded [here](https://www.cityscapes-dataset.com/). Please ensure the following directory structure:
+```
+cityscapes/
+├── gtFine/
+│   ├── train/
+│   ├── test/
+│   └── val/
+└── leftImg8bit/
+    ├── train/
+    ├── test/
+    └── val/
+```
+To create labelTrainIds from labelIds you can use [this repository](https://github.com/mcordts/cityscapesScripts).
+
+ACDC dataset can be downloaded [here](https://acdc.vision.ee.ethz.ch/). Please ensure the following directory structure:
+```
+acdc/
+├── gt/
+│   ├── fog/
+│   ├── night/
+|   ├── rain/
+│   └── snow/
+└── rgb_anon/
+    ├── fog/
+    ├── night/
+    ├── rain/
+    └── snow/
+```
+DarkZurich can be downloaded [here](https://www.trace.ethz.ch/publications/2019/GCMA_UIoU/). For pseudolabel generation demo, validation subset of Dark Zurich with 50 images is sufficient. Please ensure the following directory structure (`val` is sufficient for running [generation script](generate_pseudolabels.py)):
+
+```
+Dark_Zurich/
+├── gt/
+│   └── val/
+│       └── night/
+│           └── GOPR0356/
+└── rgb_anon/
+    ├── val/
+    │   └── night/
+    │       └── GOPR0356/
+    └── train/
+        ├── day/
+        ├── twilight/
+        └── night/
+```
+
+
 #### Training
 To run training for ConvNeXt-tiny+SwiftNet-pyramid on the `Cityscapes` training subset and evaluate it on the `Cityscapes` validation subset (using GPUs with indices 0 and 1, with a batch size of 4 per GPU), execute the following command:
 
@@ -70,7 +121,7 @@ python SNCN_train_city.py -sv pyr -bv tiny --gpus 0 1 --batch_size_per_gpu 4
 In `SNCN_train_city.py`, you can adjust other arguments as described in the script itself.
 
  #### Generating Pseudolabels
- To generate pseudolabels with trained ConvNeXt+SwiftNet model for some specific dataset (currently `DarkZurich Day subset`), first download [checkpoints](#checkpoints), and then execute the following command:
+ To generate pseudolabels with trained ConvNeXt+SwiftNet model for some specific dataset (currently `DarkZurich night val subset`), first download [checkpoints](#checkpoints), and then execute the following command:
  ```bash
  python generate_pseudolabels.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/model_single/model_last-epoch=98-val_mIoU=86.50.ckpt
  ```

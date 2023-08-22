@@ -168,6 +168,18 @@ def load_unsupervised_train(dataroots, bs, train_transforms, config):
 
 
 def prepare_datasets_for_pseudolabeling(dataroots, train_transforms):
+    dz_night_val = DarkZurichUnsupervised(
+        dataroots["dark_zurich"],
+        split="val",
+        condition="night",
+        return_name=True,
+        image_transform=tf.Compose(
+            train_transforms["image"]
+            + [tf.Normalize(dark_zurich_night_mean, dark_zurich_night_std)]
+        ),
+    )
+
+    """
     dz_day_train = DarkZurichUnsupervised(
         dataroots["dark_zurich"],
         split="train",
@@ -178,8 +190,6 @@ def prepare_datasets_for_pseudolabeling(dataroots, train_transforms):
             + [tf.Normalize(dark_zurich_day_mean, dark_zurich_day_std)]
         ),
     )
-
-    """
     dz_twilight_train = DarkZurichUnsupervised(
         dataroots["dark_zurich"],
         split="train",
@@ -202,16 +212,6 @@ def prepare_datasets_for_pseudolabeling(dataroots, train_transforms):
         ),
     )
 
-    dz_night_val = DarkZurichUnsupervised(
-        dataroots["dark_zurich"],
-        split="val",
-        condition="night",
-        return_name=True,
-        image_transform=tf.Compose(
-            train_transforms["image"]
-            + [tf.Normalize(dark_zurich_night_mean, dark_zurich_night_std)]
-        ),
-    )
 
     bdd_train = BDDUnsupervised(
         dataroots["bdd100k"],
@@ -308,7 +308,7 @@ def prepare_datasets_for_pseudolabeling(dataroots, train_transforms):
     )
     """
 
-    return [dz_day_train]
+    return [dz_night_val]
 
 
 def prepare_own_dataset(root, train_transforms, ext="png"):

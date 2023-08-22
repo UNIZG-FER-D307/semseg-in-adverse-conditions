@@ -44,5 +44,10 @@ DATAROOTS = {
 CITYSCAPES_ROOT = "datasets/cityscapes"
 VISTAS_ROOT = "datasets/vistas"
 VISTAS_CONFIG = VISTAS_ROOT
+DARK_ZURICH_ROOT = "datasets/Dark_Zurich"
 
-DATAROOTS = {"city": CITYSCAPES_ROOT, "vistas": VISTAS_ROOT}
+DATAROOTS = {
+    "city": CITYSCAPES_ROOT,
+    "vistas": VISTAS_ROOT,
+    "dark_zurich": DARK_ZURICH_ROOT,
+}
