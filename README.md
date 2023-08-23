@@ -58,7 +58,7 @@ We provide three scripts:
 
 - `SNCN_train_city.py`: This script is used for training SwiftNet+ConvNext on the `Cityscapes` training subset and evaluating it on the `Cityscapes` validation split.
 - `generate_pseudolabels.py`: This script generates pseudolabels for unlabeled data, saving the generated pseudolabels in the `args.output_pseudo` folder, along with colorized versions of the pseudolabels in the same directory.
-- `generate_predictions.py`: This script generates predictions, saving the resulting segmentation maps in the `args.output_pred` folder, along with colorized versions of the segmentation maps.
+- `generate_predictions.py`: This script generates predictions for custom images, saving the resulting predictions in the `args.output_pred` folder, along with colorized versions of the segmentation maps.
 
  ### Datasets
 
