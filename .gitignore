@@ -138,7 +138,9 @@ ckpts/*
 *.pth
 *.pt
 logs/*
-datasets/*
+datasets/Dark_Zurich
+datasets/acdc
+datasets/cityscapes
 own_images
 own_images_lit
 output_test
