@@ -1,10 +1,10 @@
 # Semantic Segmentation in Adverse Conditions
 |||
 |:--------------:|:------------------:|
-| ![Image 1](/imgs/orig_imgs/snow/GP010176_frame_000643_rgb_anon.png)  | ![Ensemble 1](/imgs/pred_ens/snow/GP010176_frame_000643_colors.png) |
-| ![Image 4](/imgs/orig_imgs/rain/GOPR0573_frame_000246_rgb_anon.png) | ![Ensemble 4](/imgs/pred_ens/rain/GOPR0573_frame_000246_colors.png) |
-| ![Image 7](/imgs/orig_imgs/night/GOPR0355_frame_000162_rgb_anon.png) | ![Ensemble 7](/imgs/pred_ens/night/GOPR0355_frame_000162_colors.png) |
-| ![Image 10](/imgs/orig_imgs/fog/GP010475_frame_000300_rgb_anon.png)  | ![Ensemble 10](/imgs/pred_ens/fog/GP010475_frame_000300_colors.png) |
+| ![Image 1](./docs/imgs/orig_imgs/snow/GP010176_frame_000643_rgb_anon.png)  | ![Ensemble 1](./docs/imgs/pred_ens/snow/GP010176_frame_000643_colors.png) |
+| ![Image 4](./docs/imgs/orig_imgs/rain/GOPR0573_frame_000246_rgb_anon.png) | ![Ensemble 4](./docs/imgs/pred_ens/rain/GOPR0573_frame_000246_colors.png) |
+| ![Image 7](./docs/imgs/orig_imgs/night/GOPR0355_frame_000162_rgb_anon.png) | ![Ensemble 7](./docs/imgs/pred_ens/night/GOPR0355_frame_000162_colors.png) |
+| ![Image 10](./docs/imgs/orig_imgs/fog/GP010475_frame_000300_rgb_anon.png)  | ![Ensemble 10](./docs/imgs/pred_ens/fog/GP010475_frame_000300_colors.png) |
 
 
 ## To Do
@@ -23,7 +23,7 @@ Our method involves collecting a large number of labeled and unlabeled scene dri
 **Labeled datasets** we use: *ACDC*, *Cityscapes*, *Dark Zurich* validation subset, *Foggy Zurich*, *Foggy Driving*, *Wilddash*, *BDD10k* Train/Val, *Mapillary Vistas*, *Foggy Cityscapes*, *Rain Cityscapes*
 **Unlabeled datasets** for which we generate pseudolabels: *Dark Zurich* train, 10k *NightOwls* images, *NightCity*, *BDD100k* {Rain, Snow, Fog} subsets, 5.6k *CADCD* images
  ### Experiments 
-First, we confirmed the architecture we intend to use. The results of this validation process are detailed in the [architecture validation](ARCHITECTURE_VALIDATION.md) document. Following architecture validation, we conducted 8 training runs, with different training datasets employed in each run. The final model sent to the evaluation server was a simple ensemble comprised of models from 4 distinct experiments (Experiments 2, 5, 6, and 7 as listed in the [final experiments table](./FINAL_EXPERIMENTS.md#results)). For a more comprehensive overview of the hyperparameters and datasets employed in each of the experiments, please refer to the associated [document](./FINAL_EXPERIMENTS.md).
+First, we confirmed the architecture we intend to use. The results of this validation process are detailed in the [architecture validation](./docs/ARCHITECTURE_VALIDATION.md) document. Following architecture validation, we conducted 8 training runs, with different training datasets employed in each run. The final model sent to the evaluation server was a simple ensemble comprised of models from 4 distinct experiments (Experiments 2, 5, 6, and 7 as listed in the [final experiments table](./docs/FINAL_EXPERIMENTS.md#results)). For a more comprehensive overview of the hyperparameters and datasets employed in each of the experiments, please refer to the associated [document](./docs/FINAL_EXPERIMENTS.md).
  #### Checkpoints
  You can download pretrained checkpoints [here](https://ferhr-my.sharepoint.com/:f:/g/personal/imartinovic_fer_hr/EgHe_gpUZppOtITLcVHQEuwBnlNK93h_BtpRjpdDMYcHTA?e=G1ohSa). After downloading, you should have the following directory structure:
 
@@ -44,28 +44,28 @@ acdc-semseg/               # Project root directory
 #### Snow
 | Original Image | Single Model Prediction (ms) | Ensemble Prediction (ms) |
 |:--------------:|:----------------------:|:------------------:|
-| ![Image 1](/imgs/orig_imgs/snow/GP010176_frame_000643_rgb_anon.png) | ![Prediction 1](/imgs/pred_single/snow/GP010176_frame_000643_colors.png) | ![Ensemble 1](/imgs/pred_ens/snow/GP010176_frame_000643_colors.png) |
-| ![Image 2](/imgs/orig_imgs/snow/GP010494_frame_000001_rgb_anon.png) | ![Prediction 2](/imgs/pred_single/snow/GP010494_frame_000001_colors.png) | ![Ensemble 2](/imgs/pred_ens/snow/GP010494_frame_000001_colors.png) |
-| ![Image 3](/imgs/orig_imgs/snow/GP010176_frame_000418_rgb_anon.png) | ![Prediction 3](/imgs/pred_single/snow/GP010176_frame_000418_colors.png) | ![Ensemble 3](/imgs/pred_ens/snow/GP010176_frame_000418_colors.png) |
+| ![Image 1](./docs/imgs/orig_imgs/snow/GP010176_frame_000643_rgb_anon.png) | ![Prediction 1](./docs/imgs/pred_single/snow/GP010176_frame_000643_colors.png) | ![Ensemble 1](./docs/imgs/pred_ens/snow/GP010176_frame_000643_colors.png) |
+| ![Image 2](./docs/imgs/orig_imgs/snow/GP010494_frame_000001_rgb_anon.png) | ![Prediction 2](./docs/imgs/pred_single/snow/GP010494_frame_000001_colors.png) | ![Ensemble 2](./docs/imgs/pred_ens/snow/GP010494_frame_000001_colors.png) |
+| ![Image 3](./docs/imgs/orig_imgs/snow/GP010176_frame_000418_rgb_anon.png) | ![Prediction 3](./docs/imgs/pred_single/snow/GP010176_frame_000418_colors.png) | ![Ensemble 3](./docs/imgs/pred_ens/snow/GP010176_frame_000418_colors.png) |
 #### Rain
 | Original Image | Single Model Prediction (ms) | Ensemble Prediction (ms) |
 |:--------------:|:----------------------:|:------------------:|
-| ![Image 4](/imgs/orig_imgs/rain/GOPR0573_frame_000246_rgb_anon.png) | ![Prediction 4](/imgs/pred_single/rain/GOPR0573_frame_000246_colors.png) | ![Ensemble 4](/imgs/pred_ens/rain/GOPR0573_frame_000246_colors.png) |
-| ![Image 5](/imgs/orig_imgs/rain/GP020573_frame_000353_rgb_anon.png) | ![Prediction 5](/imgs/pred_single/rain/GP020573_frame_000353_colors.png) | ![Ensemble 5](/imgs/pred_ens/rain/GP020573_frame_000353_colors.png) |
-| ![Image 6](/imgs/orig_imgs/rain/GP010571_frame_000784_rgb_anon.png) | ![Prediction 6](/imgs/pred_single/rain/GP010571_frame_000784_colors.png) | ![Ensemble 6](/imgs/pred_ens/rain/GP010571_frame_000784_colors.png) |
+| ![Image 4](./docs/imgs/orig_imgs/rain/GOPR0573_frame_000246_rgb_anon.png) | ![Prediction 4](./docs/imgs/pred_single/rain/GOPR0573_frame_000246_colors.png) | ![Ensemble 4](./docs/imgs/pred_ens/rain/GOPR0573_frame_000246_colors.png) |
+| ![Image 5](./docs/imgs/orig_imgs/rain/GP020573_frame_000353_rgb_anon.png) | ![Prediction 5](./docs/imgs/pred_single/rain/GP020573_frame_000353_colors.png) | ![Ensemble 5](./docs/imgs/pred_ens/rain/GP020573_frame_000353_colors.png) |
+| ![Image 6](./docs/imgs/orig_imgs/rain/GP010571_frame_000784_rgb_anon.png) | ![Prediction 6](./docs/imgs/pred_single/rain/GP010571_frame_000784_colors.png) | ![Ensemble 6](./docs/imgs/pred_ens/rain/GP010571_frame_000784_colors.png) |
 #### Night
 
 | Original Image | Single Model Prediction (ms) | Ensemble Prediction (ms) |
 |:--------------:|:----------------------:|:------------------:|
-| ![Image 7](/imgs/orig_imgs/night/GOPR0355_frame_000162_rgb_anon.png) | ![Prediction 7](/imgs/pred_single/night/GOPR0355_frame_000162_colors.png) | ![Ensemble 7](/imgs/pred_ens/night/GOPR0355_frame_000162_colors.png) |
-| ![Image 8](/imgs/orig_imgs/night/GOPR0356_frame_000162_rgb_anon.png) | ![Prediction 8](/imgs/pred_single/night/GOPR0356_frame_000162_colors.png) | ![Ensemble 8](/imgs/pred_ens/night/GOPR0356_frame_000162_colors.png) |
-| ![Image 9](/imgs/orig_imgs/night/GP010594_frame_000034_rgb_anon.png) | ![Prediction 9](/imgs/pred_single/night/GP010594_frame_000034_colors.png) | ![Ensemble 9](/imgs/pred_ens/night/GP010594_frame_000034_colors.png) |
+| ![Image 7](./docs/imgs/orig_imgs/night/GOPR0355_frame_000162_rgb_anon.png) | ![Prediction 7](./docs/imgs/pred_single/night/GOPR0355_frame_000162_colors.png) | ![Ensemble 7](./docs/imgs/pred_ens/night/GOPR0355_frame_000162_colors.png) |
+| ![Image 8](./docs/imgs/orig_imgs/night/GOPR0356_frame_000162_rgb_anon.png) | ![Prediction 8](./docs/imgs/pred_single/night/GOPR0356_frame_000162_colors.png) | ![Ensemble 8](./docs/imgs/pred_ens/night/GOPR0356_frame_000162_colors.png) |
+| ![Image 9](./docs/imgs/orig_imgs/night/GP010594_frame_000034_rgb_anon.png) | ![Prediction 9](./docs/imgs/pred_single/night/GP010594_frame_000034_colors.png) | ![Ensemble 9](./docs/imgs/pred_ens/night/GP010594_frame_000034_colors.png) |
 #### Fog
 | Original Image | Single Model Prediction (ms) | Ensemble Prediction (ms) |
 |:--------------:|:----------------------:|:------------------:|
-| ![Image 10](/imgs/orig_imgs/fog/GP010475_frame_000300_rgb_anon.png) | ![Prediction 10](/imgs/pred_single/fog/GP010475_frame_000300_colors.png) | ![Ensemble 10](/imgs/pred_ens/fog/GP010475_frame_000300_colors.png) |
-| ![Image 11](/imgs/orig_imgs/fog/GP010477_frame_000127_rgb_anon.png) | ![Prediction 11](/imgs/pred_single/fog/GP010477_frame_000127_colors.png) | ![Ensemble 11](/imgs/pred_ens/fog/GP010477_frame_000127_colors.png) |
-| ![Image 12](/imgs/orig_imgs/fog/GP010478_frame_000167_rgb_anon.png) | ![Prediction 12](/imgs/pred_single/fog/GP010478_frame_000167_colors.png) | ![Ensemble 12](/imgs/pred_ens/fog/GP010478_frame_000167_colors.png) |
+| ![Image 10](./docs/imgs/orig_imgs/fog/GP010475_frame_000300_rgb_anon.png) | ![Prediction 10](./docs/imgs/pred_single/fog/GP010475_frame_000300_colors.png) | ![Ensemble 10](./docs/imgs/pred_ens/fog/GP010475_frame_000300_colors.png) |
+| ![Image 11](./docs/imgs/orig_imgs/fog/GP010477_frame_000127_rgb_anon.png) | ![Prediction 11](./docs/imgs/pred_single/fog/GP010477_frame_000127_colors.png) | ![Ensemble 11](./docs/imgs/pred_ens/fog/GP010477_frame_000127_colors.png) |
+| ![Image 12](./docs/imgs/orig_imgs/fog/GP010478_frame_000167_rgb_anon.png) | ![Prediction 12](./docs/imgs/pred_single/fog/GP010478_frame_000167_colors.png) | ![Ensemble 12](./docs/imgs/pred_ens/fog/GP010478_frame_000167_colors.png) |
 
  ## Running
 
