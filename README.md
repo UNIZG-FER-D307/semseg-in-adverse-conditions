@@ -19,7 +19,7 @@
  - [x] Upload saved checkpoints
  - [x] Add `config.json` from vistas and create `datasets` folder (remove from `.gitgnore`)
  - [x] Add singlescale/multiscale inference support 
- - [ ] Add ensemble evaluation support
+ - [x] Add ensemble evaluation support
  ## Method
 Our method involves collecting a large number of labeled and unlabeled scene driving images. We used labeled images itself as a source of supervision, and for unlabeled images, we generated hard pseudolabels based on the model's softmax confidence. First, we trained the model using only labeled images. Then, based on thresholded softmax confidence, we generated pseudolabels for the unlabeled images. We iteratively repeated this procedure.
 
@@ -194,3 +194,5 @@ In `SNCN_train_city.py`, you can adjust other arguments as described in the scri
 ```bash
  python generate_predictions.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens1.ckpt ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens2.ckpt ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens3.ckpt ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens4.ckpt --img_dir path/to/own/directory/with/images
  ```
+##### Acknowledgment
+Special thanks [matejgrcic](https://github.com/matejgrcic) for sharing his code and idea with me.
