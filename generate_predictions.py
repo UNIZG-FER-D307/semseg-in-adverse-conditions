@@ -1,19 +1,23 @@
 import warnings
 
 warnings.filterwarnings("ignore")
-import torch
+import copy
+from argparse import ArgumentParser
+
 import pytorch_lightning as pl
+import torch
+import torch.nn as nn
+
+from config import DATAROOTS
+from data import create_raw_val_transform, load_own_dataset
+from evaluations import PseudolabelGenerator
 from models import (
     PyramidSemSeg,
-    convnext_tiny_,
+    SingleScaleSemSeg,
     convnext_base_,
     convnext_large_,
-    SingleScaleSemSeg,
+    convnext_tiny_,
 )
-from evaluations import PseudolabelGenerator
-from data import load_own_dataset, create_raw_val_transform
-from config import DATAROOTS
-from argparse import ArgumentParser
 
 # Disable cuDNN
 torch.backends.cudnn.enabled = False
@@ -30,6 +34,63 @@ swiftnet_versions = {
     "ss": SingleScaleSemSeg,
     "pyr": PyramidSemSeg,
 }
+
+
+class SimpleEnsemble(nn.Module):
+    def __init__(self, template_model, weights):
+        super(SimpleEnsemble, self).__init__()
+
+        self.models = nn.ModuleList([])
+        for w in weights:
+            m = copy.deepcopy(template_model)
+            m.load_state_dict(w, strict=True)
+            m.eval()
+            self.models.append(m)
+
+    def forward(self, x):
+        with torch.no_grad():
+            return torch.cat([m(x).unsqueeze(0) for m in self.models], 0).mean(0)
+
+
+def load_model(args, config):
+    template_model = swiftnet_versions[args.swiftnet_version](
+        backbone=config["backbone"],
+        num_classes=config["num_classes"],
+        upsample_dims=args.upsample_dims,
+    )
+    # single model
+    if len(args.ckpt_path) == 1:
+        print("Loading single model...")
+        # Load model weights from the checkpoint
+        state_dict = torch.load(args.ckpt_path[0])["state_dict"]
+        new_state = {
+            k.replace("model.", ""): v for k, v in state_dict.items() if "loss" not in k
+        }
+        template_model.load_state_dict(new_state)
+
+        # Configure the model for evaluation
+        config["model"] = template_model
+        template_model.eval()
+    # ensemble
+    else:
+        print(f"Loading ensemble of {len(args.ckpt_path)} models...")
+
+        def remap_keys(d):
+            new_state = dict()
+            for k, v in d.items():
+                if "loss" in k:
+                    continue
+                new_state[k.replace("model.", "")] = v
+            return new_state
+
+        weights = [
+            remap_keys(torch.load(file, map_location="cpu")["state_dict"])
+            for file in args.ckpt_path
+        ]
+        model = SimpleEnsemble(template_model=template_model, weights=weights)
+        config["model"] = model
+
+    return config["model"]
 
 
 def main(args):
@@ -58,22 +119,7 @@ def main(args):
     print("Selected GPUs:", config["GPUs"])
 
     # Instantiate the selected SwiftNet model
-    model = swiftnet_versions[args.swiftnet_version](
-        backbone=config["backbone"],
-        num_classes=config["num_classes"],
-        upsample_dims=args.upsample_dims,
-    )
-
-    # Load model weights from the checkpoint
-    state_dict = torch.load(args.ckpt_path)["state_dict"]
-    new_state = {
-        k.replace("model.", ""): v for k, v in state_dict.items() if "loss" not in k
-    }
-    model.load_state_dict(new_state)
-
-    # Configure the model for evaluation
-    config["model"] = model
-    model.eval()
+    model = load_model(args=args, config=config)
 
     # Initialize the PseudolabelGenerator for generating predictions
     pl_exp = PseudolabelGenerator(
@@ -109,7 +155,7 @@ if __name__ == "__main__":
     # Define command-line arguments
     parser.add_argument(
         "--ckpt_path",
-        type=str,
+        nargs="+",
         required=True,
         help="Specifies the path to the checkpoint utilized for prediction generation.",
     )
@@ -180,7 +226,7 @@ if __name__ == "__main__":
         help="Specifies the extension/format of images used for inference.",
     )
     parser.add_argument(
-        "--multiscale", action="store true", help="Multi scale inference"
+        "--multiscale", action="store_true", help="Multi scale inference"
     )
 
     args = parser.parse_args()

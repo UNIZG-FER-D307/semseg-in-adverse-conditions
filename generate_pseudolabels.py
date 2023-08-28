@@ -3,19 +3,21 @@ import warnings
 # Suppress warnings
 warnings.filterwarnings("ignore")
 
-import torch
+from argparse import ArgumentParser
+
 import pytorch_lightning as pl
+import torch
+
+from config import DATAROOTS
+from data import create_raw_val_transform, load_datasets_for_pseudolabeling
+from evaluations import PseudolabelGenerator
 from models import (
     PyramidSemSeg,
-    convnext_tiny_,
+    SingleScaleSemSeg,
     convnext_base_,
     convnext_large_,
-    SingleScaleSemSeg,
+    convnext_tiny_,
 )
-from evaluations import PseudolabelGenerator
-from data import load_datasets_for_pseudolabeling, create_raw_val_transform
-from config import DATAROOTS
-from argparse import ArgumentParser
 
 # Disable cuDNN
 torch.backends.cudnn.enabled = False

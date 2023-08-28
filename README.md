@@ -190,3 +190,7 @@ In `SNCN_train_city.py`, you can adjust other arguments as described in the scri
  ```bash
  python generate_predictions.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/model_single/sn-pyr_cn-lg_ud-320_best.ckpt --img_dir path/to/own/directory/with/images
  ```
+ To generate predictions with ensemble of $n$ models, set $n$ checkpoint paths when executing script:
+```bash
+ python generate_predictions.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens1.ckpt ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens2.ckpt ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens3.ckpt ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens4.ckpt --img_dir path/to/own/directory/with/images
+ ```

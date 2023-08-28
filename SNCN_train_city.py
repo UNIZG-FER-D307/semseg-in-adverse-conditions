@@ -3,30 +3,32 @@ import warnings
 # Suppress warnings
 warnings.filterwarnings("ignore")
 
-import torch.optim as optim
-import torch
-import pytorch_lightning as pl
-from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
-from pytorch_lightning import loggers as pl_loggers
-from models import (
-    convnext_tiny_,
-    convnext_base_,
-    convnext_large_,
-    PyramidSemSeg,
-    SingleScaleSemSeg,
-)
-from experiments import BoundaryAwareSemseg
-from data import (
-    load_city_train,
-    load_city_val,
-    create_jitter_random_crop_BA_transform,
-    create_basic_BA_transform,
-    cityscapes_mean,
-    cityscapes_std,
-)
-from config import CITYSCAPES_ROOT
 from argparse import ArgumentParser
 from datetime import datetime
+
+import pytorch_lightning as pl
+import torch
+import torch.optim as optim
+from pytorch_lightning import loggers as pl_loggers
+from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
+
+from config import CITYSCAPES_ROOT
+from data import (
+    cityscapes_mean,
+    cityscapes_std,
+    create_basic_BA_transform,
+    create_jitter_random_crop_BA_transform,
+    load_city_train,
+    load_city_val,
+)
+from experiments import BoundaryAwareSemseg
+from models import (
+    PyramidSemSeg,
+    SingleScaleSemSeg,
+    convnext_base_,
+    convnext_large_,
+    convnext_tiny_,
+)
 
 # Dictionary mapping backbone versions to functions
 backbone_versions = {
