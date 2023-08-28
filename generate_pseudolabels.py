@@ -81,6 +81,7 @@ def main(args):
         num_classes=config["num_classes"],
         output_dir=config["output_pseudo"],
         min_conf=args.minimal_confidence,
+        multiscale=args.multiscale,
     )
 
     # Load validation dataset for pseudolabeling
@@ -167,7 +168,9 @@ if __name__ == "__main__":
         default=0.99,
         help="The hard pseudolabel will incorporate all pixels whose softmax values surpass the specified minimal confidence threshold.",
     )
-
+    parser.add_argument(
+        "--multiscale", action="store_true", help="Multi scale inference"
+    )
     # Parse command-line arguments
     args = parser.parse_args()
     main(args)

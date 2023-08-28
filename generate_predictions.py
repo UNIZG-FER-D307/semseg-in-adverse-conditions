@@ -82,6 +82,7 @@ def main(args):
         num_classes=config["num_classes"],
         output_dir=config["output_pred"],
         min_conf=0,
+        multiscale=args.multiscale,
     )
 
     # Load validation dataset
@@ -177,6 +178,9 @@ if __name__ == "__main__":
         choices=["png", "jpg", "jpeg"],
         default="png",
         help="Specifies the extension/format of images used for inference.",
+    )
+    parser.add_argument(
+        "--multiscale", action="store true", help="Multi scale inference"
     )
 
     args = parser.parse_args()

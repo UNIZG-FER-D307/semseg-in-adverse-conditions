@@ -18,7 +18,7 @@
  - [x] Add environment installation instructions
  - [x] Upload saved checkpoints
  - [x] Add `config.json` from vistas and create `datasets` folder (remove from `.gitgnore`)
- - [ ] Add singlescale/multiscale inference support 
+ - [x] Add singlescale/multiscale inference support 
  - [ ] Add ensemble evaluation support
  ## Method
 Our method involves collecting a large number of labeled and unlabeled scene driving images. We used labeled images itself as a source of supervision, and for unlabeled images, we generated hard pseudolabels based on the model's softmax confidence. First, we trained the model using only labeled images. Then, based on thresholded softmax confidence, we generated pseudolabels for the unlabeled images. We iteratively repeated this procedure.
@@ -29,9 +29,9 @@ Our method involves collecting a large number of labeled and unlabeled scene dri
  ### Experiments 
 First, we confirmed the architecture we intend to use. The results of this validation process are detailed in the [architecture validation](./docs/ARCHITECTURE_VALIDATION.md) document. Following architecture validation, we conducted 8 training runs, with different training datasets employed in each run. The final model sent to the evaluation server was a simple ensemble comprised of models from 4 distinct experiments (Experiments 2, 5, 6, and 7 as listed in the [final experiments table](./docs/FINAL_EXPERIMENTS.md#results)). For a more comprehensive overview of the hyperparameters and datasets employed in each of the experiments, please refer to the associated [document](./docs/FINAL_EXPERIMENTS.md).
 
-At the end of the competition, our model was ranked 2nd with **83.82** mIoU. 
+At the end of the competition, our ensemble model was ranked 2nd with **83.82** mIoU. 
 
-![Benchmark-Results](benchmark_acdc.png)
+![Benchmark-Results](./docs/imgs/benchmark_acdc.png)
 
  #### Checkpoints
  Pretrained checkpoints are available [here](https://ferhr-my.sharepoint.com/:f:/g/personal/imartinovic_fer_hr/EgHe_gpUZppOtITLcVHQEuwBnlNK93h_BtpRjpdDMYcHTA?e=G1ohSa). After downloading, you should have the following directory structure:
@@ -78,6 +78,13 @@ acdc-semseg/               # Project root directory
 
  ## Running
 
+ We provide three scripts:
+
+- [SNCN_train_city.py](SNCN_train_city.py): This script is used for training SwiftNet+ConvNext on the `Cityscapes` training subset and evaluating it on the `Cityscapes` validation split.
+- [generate_pseudolabels.py](generate_pseudolabels.py): This script generates pseudolabels for unlabeled data, saving the generated pseudolabels in the `args.output_pseudo` folder, along with colorized versions of the pseudolabels in the same directory.
+- [generate_predictions.py](generate_predictions.py): This script generates predictions for custom images, saving the resulting predictions in the `args.output_pred` folder, along with colorized versions of the segmentation maps.
+
+
 ### Environment Installation
 
 Before running the acdc-semseg project, make sure you have [miniconda](https://docs.conda.io/en/latest/miniconda.html) or [anaconda](https://docs.anaconda.com/free/anaconda/install/index.html) installed on your system. Follow the steps below to set up the required environment:
@@ -112,17 +119,11 @@ Before running the acdc-semseg project, make sure you have [miniconda](https://d
 
 **Note:** The project has been developed and tested with CUDA 11.7, Pytorch 2.0, and Pytorch-Lightning 2.0.6. However, using Pytorch >=1.10 should also work fine.
 
-We provide three scripts:
-
-- [SNCN_train_city.py](SNCN_train_city.py): This script is used for training SwiftNet+ConvNext on the `Cityscapes` training subset and evaluating it on the `Cityscapes` validation split.
-- [generate_pseudolabels.py](generate_pseudolabels.py): This script generates pseudolabels for unlabeled data, saving the generated pseudolabels in the `args.output_pseudo` folder, along with colorized versions of the pseudolabels in the same directory.
-- [generate_predictions.py](generate_predictions.py): This script generates predictions for custom images, saving the resulting predictions in the `args.output_pred` folder, along with colorized versions of the segmentation maps.
-
  ### Datasets
 
 Cityscapes and DarkZurich Val subset are sufficient to run [training](SNCN_train_city.py) and [pseudolabel generation](generate_pseudolabels.py) scripts.
 
-Cityscapes can be downloaded [here](https://www.cityscapes-dataset.com/). Please ensure the following directory structure:
+Cityscapes available [here](https://www.cityscapes-dataset.com/). Please ensure the following directory structure:
 ```
 cityscapes/
 ├── gtFine/
@@ -136,7 +137,7 @@ cityscapes/
 ```
 To create labelTrainIds from labelIds you can use [this repository](https://github.com/mcordts/cityscapesScripts).
 
-ACDC dataset can be downloaded [here](https://acdc.vision.ee.ethz.ch/). Please ensure the following directory structure:
+ACDC available [here](https://acdc.vision.ee.ethz.ch/). Please ensure the following directory structure:
 ```
 acdc/
 ├── gt/
@@ -150,7 +151,7 @@ acdc/
     ├── rain/
     └── snow/
 ```
-DarkZurich can be downloaded [here](https://www.trace.ethz.ch/publications/2019/GCMA_UIoU/). For pseudolabel generation demo, validation subset of Dark Zurich with 50 images is sufficient. Please ensure the following directory structure (`val` is sufficient for running [generation script](generate_pseudolabels.py)):
+DarkZurich available [here](https://www.trace.ethz.ch/publications/2019/GCMA_UIoU/). For pseudolabel generation demo, validation subset of Dark Zurich with 50 images is sufficient. Please ensure the following directory structure (`val` is sufficient for running [generation script](generate_pseudolabels.py)):
 
 ```
 Dark_Zurich/
@@ -170,6 +171,7 @@ Dark_Zurich/
 
 
 #### Training
+
 To run training for ConvNeXt-tiny+SwiftNet-pyramid on the `Cityscapes` training subset and evaluate it on the `Cityscapes` validation subset (using GPUs with indices 0 and 1, with a batch size of 4 per GPU), execute [SNCN_train_city](./SNCN_train_city.py) script:
 
 ```bash
@@ -181,10 +183,10 @@ In `SNCN_train_city.py`, you can adjust other arguments as described in the scri
  #### Generating Pseudolabels
  To generate pseudolabels with trained ConvNeXt+SwiftNet model for some specific dataset (currently `DarkZurich night val subset`), download [checkpoints](#checkpoints), and then execute [generate pseudolabels](./generate_pseudolabels.py) script:
  ```bash
- python generate_pseudolabels.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/model_single/model_last-epoch=98-val_mIoU=86.50.ckpt
+ python generate_pseudolabels.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/model_single/sn-pyr_cn-lg_ud-320_best.ckpt
  ```
  #### Generating Predictions
  To generate predictions with trained ConvNeXt+SwiftNet model for custom images, download [checkpoints](#checkpoints), and then execute [generate_predictions](./generate_predictions.py) script:
  ```bash
- python generate_predictions.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/model_single/model_last-epoch=98-val_mIoU=86.50.ckpt --img_dir path/to/own/directory/with/images
+ python generate_predictions.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/model_single/sn-pyr_cn-lg_ud-320_best.ckpt --img_dir path/to/own/directory/with/images
  ```
