@@ -1,4 +1,7 @@
 # Semantic Segmentation in Adverse Conditions
+[![ACDC](https://img.shields.io/badge/Ranked_%234%20-ACDC_Supervised_Semantic_Segmentation-blue)](https://acdc.vision.ee.ethz.ch/benchmarks#semanticSegmentation)
+[![ACDC](https://img.shields.io/badge/Ranked_%232%20-ACDC_Uncertainty_Aware_Semantic_Segmentation-blue)](https://acdc.vision.ee.ethz.ch/benchmarks#uncertaintyAwareSemanticSegmentation) 
+
 |||
 |:--------------:|:------------------:|
 | ![Image 1](./docs/imgs/orig_imgs/snow/GP010176_frame_000643_rgb_anon.png)  | ![Ensemble 1](./docs/imgs/pred_ens/snow/GP010176_frame_000643_colors.png) |
@@ -10,20 +13,26 @@
 ## To Do
 - [ ] Add technical report
  - [x] Add predictions generated with the best model and ensemble
- - [ ] Add results obtained with different architectures 
- - [ ] Add tables with final results and (pseudo)labeled data used
+ - [x] Add results obtained with different architectures 
+ - [x] Add tables with final results and (pseudo)labeled data used
  - [x] Add environment installation instructions
  - [x] Upload saved checkpoints
  - [x] Add `config.json` from vistas and create `datasets` folder (remove from `.gitgnore`)
  - [ ] Add singlescale/multiscale inference support 
  - [ ] Add ensemble evaluation support
  ## Method
-Our method involves collecting a large number of labeled and unlabeled scene driving images. We use labeled images itself as a source of supervision, and for unlabeled images, we generate hard pseudolabels based on the model's softmax confidence. First, we train the model using only labeled images. Then, based on thresholded softmax confidence, we generate pseudolabels for the unlabeled images. We iteratively repeat this procedure.
+Our method involves collecting a large number of labeled and unlabeled scene driving images. We used labeled images itself as a source of supervision, and for unlabeled images, we generated hard pseudolabels based on the model's softmax confidence. First, we trained the model using only labeled images. Then, based on thresholded softmax confidence, we generated pseudolabels for the unlabeled images. We iteratively repeated this procedure.
 
 **Labeled datasets** we use: *ACDC*, *Cityscapes*, *Dark Zurich* validation subset, *Foggy Zurich*, *Foggy Driving*, *Wilddash*, *BDD10k* Train/Val, *Mapillary Vistas*, *Foggy Cityscapes*, *Rain Cityscapes*
+
 **Unlabeled datasets** for which we generate pseudolabels: *Dark Zurich* train, 10k *NightOwls* images, *NightCity*, *BDD100k* {Rain, Snow, Fog} subsets, 5.6k *CADCD* images
  ### Experiments 
 First, we confirmed the architecture we intend to use. The results of this validation process are detailed in the [architecture validation](./docs/ARCHITECTURE_VALIDATION.md) document. Following architecture validation, we conducted 8 training runs, with different training datasets employed in each run. The final model sent to the evaluation server was a simple ensemble comprised of models from 4 distinct experiments (Experiments 2, 5, 6, and 7 as listed in the [final experiments table](./docs/FINAL_EXPERIMENTS.md#results)). For a more comprehensive overview of the hyperparameters and datasets employed in each of the experiments, please refer to the associated [document](./docs/FINAL_EXPERIMENTS.md).
+
+At the end of the competition, our model was ranked 2nd with mIoU **83.82**. 
+
+![Benchmark-Results](benchmark_acdc.png)
+
  #### Checkpoints
  You can download pretrained checkpoints [here](https://ferhr-my.sharepoint.com/:f:/g/personal/imartinovic_fer_hr/EgHe_gpUZppOtITLcVHQEuwBnlNK93h_BtpRjpdDMYcHTA?e=G1ohSa). After downloading, you should have the following directory structure:
 
