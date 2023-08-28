@@ -146,3 +146,6 @@ own_images_lit
 output_test
 open_clip
 pytorch-image-models
+output_pseudo_test
+output_pred_test
+output_test
