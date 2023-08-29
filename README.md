@@ -194,5 +194,22 @@ In `SNCN_train_city.py`, you can adjust other arguments as described in the scri
 ```bash
  python generate_predictions.py -sv pyr -bv large --gpus 0 --upsample_dims 320 --ckpt_path ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens1.ckpt ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens2.ckpt ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens3.ckpt ckpts/models_ensemble/sn-pyr_cn-lg_ud-320_ens4.ckpt --img_dir path/to/own/directory/with/images
  ```
+
+##### Citation
+
+```
+@article{orsic21pr,
+  author       = {Marin Orsic and
+                  Sinisa Segvic},
+  title        = {Efficient semantic segmentation with pyramidal fusion},
+  journal      = {Pattern Recognition},
+  volume       = {110},
+  pages        = {107611},
+  year         = {2021},
+  url          = {https://doi.org/10.1016/j.patcog.2020.107611},
+  doi          = {10.1016/j.patcog.2020.107611}
+}
+```
+
 ##### Acknowledgment
 Special thanks to [matejgrcic](https://github.com/matejgrcic) for sharing his code and idea with me.
